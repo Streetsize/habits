@@ -230,3 +230,385 @@ body {
     #glitch-title { font-size: 1.8rem; margin-bottom: 3rem; }
     .subtitle { font-size: 1rem; margin-bottom: 3.5rem; }
 }
+
+/* --- Pantalla 5: Menú Principal --- */
+#menu-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none; /* Se oculta al inicio */
+    background: #0f0f0f;
+    align-items: center;
+    justify-content: center;
+    z-index: 110;
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Separación entre los botones */
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.menu-btn {
+    background: transparent;
+    color: #e0e0e0;
+    border: 1px solid rgba(224, 224, 224, 0.3);
+    padding: 15px 40px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+    
+    /* Estado inicial antes de la animación */
+    opacity: 0;
+    transform: translateY(-20px);
+	
+	user-select: none;           /* Evita que el texto se resalte en azul al hacer clic */
+    caret-color: transparent;    /* Elimina cualquier barra parpadeante de texto */
+    outline: none;               /* Quita el recuadro que aparece en algunos navegadores al hacer clic */
+    -webkit-tap-highlight-color: transparent; /* Elimina el destello azul al tocar en móviles */
+}
+
+.menu-btn:hover {
+    background: #e0e0e0;
+    color: #0f0f0f;
+    border-color: #e0e0e0;
+}
+
+/* Animación de Cascada */
+.cascade-in {
+    animation: dropIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes dropIn {
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Retrasos escalonados para cada botón */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.3s; }
+.delay-3 { animation-delay: 0.5s; }
+.delay-4 { animation-delay: 0.7s; }
+.delay-5 { animation-delay: 0.9s; }
+
+/* --- Estilo Base de Botones de Menú --- */
+.menu-btn {
+    background: transparent;
+    color: #e0e0e0;
+    border: 1px solid rgba(224, 224, 224, 0.3);
+    padding: 15px 40px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateY(-20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px; /* Espacio entre texto y candado */
+    user-select: none;
+    caret-color: transparent;
+    outline: none;
+}
+
+/* --- Botón Bloqueado (Locked) --- */
+.menu-btn.locked {
+    color: #666; /* Grisáceo */
+    border-color: rgba(102, 102, 102, 0.2);
+    background: rgba(255, 255, 255, 0.02);
+    cursor: not-allowed;
+    pointer-events: none; /* No se puede seleccionar ni tocar */
+}
+
+/* --- Ícono del Candado --- */
+.lock-icon {
+    width: 18px;
+    height: 18px;
+    stroke: #555;
+    flex-shrink: 0;
+}
+
+.menu-btn:not(.locked):hover {
+    background: #e0e0e0;
+    color: #0f0f0f;
+    border-color: #e0e0e0;
+}
+
+/* (Mantenemos la animación cascade-in y los delay que ya tenías) */
+.cascade-in {
+    animation: dropIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes dropIn {
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* --- Pantalla 6: Sección Uno (Juego) --- */
+#section-one-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none; /* Se oculta al inicio */
+    background: #0f0f0f;
+    align-items: center;
+    justify-content: center;
+    z-index: 120;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 650px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#story-text {
+    font-size: 1.4rem;
+    line-height: 2;
+    min-height: 150px;
+    user-select: none;
+}
+
+/* El espacio a rellenar */
+.drop-zone {
+    display: inline-block;
+    min-width: 120px;
+    height: 1.4rem;
+    border-bottom: 2px dashed #666;
+    margin: 0 10px;
+    vertical-align: bottom;
+    transition: all 0.3s;
+}
+
+.drop-zone.active {
+    border-color: #e0e0e0;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.drop-zone.filled {
+    border-bottom: none;
+    color: #fff;
+    font-weight: bold;
+    min-width: auto;
+}
+
+/* Contenedor de opciones */
+#options-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    min-height: 50px;
+}
+
+/* Los bloquecitos */
+.drag-option {
+    border: 1px solid rgba(224, 224, 224, 0.3);
+    padding: 10px 25px;
+    cursor: grab;
+    background: transparent;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    user-select: none;
+    transition: all 0.3s;
+}
+
+.drag-option:active {
+    cursor: grabbing;
+}
+
+/* Animación de error */
+.drag-option.wrong {
+    border-color: #ff4444;
+    color: #ff4444;
+    animation: shakeError 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+/* --- Indicador de Puntos --- */
+.score-display {
+    color: #888;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    
+    /* Preparamos la animación para que caiga igual que los botones */
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+#score-value {
+    color: #e0e0e0;
+    font-weight: bold;
+    font-size: 1.3rem;
+    transition: color 0.3s ease;
+}
+
+/* Efecto cuando se suma un punto */
+.score-highlight {
+    color: #ff4444 !important;
+    text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+/* --- Pantalla 7: Sección Dos --- */
+#section-two-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    background: #0f0f0f;
+    align-items: center;
+    justify-content: center;
+    z-index: 125;
+}
+
+#screen-time-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #444;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-size: 2.5rem;
+    text-align: center;
+    width: 100px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#screen-time-input:focus {
+    border-color: #ff4444;
+}
+
+/* Chrome, Safari, Edge, Opera: Quitar flechas del input number */
+#screen-time-input::-webkit-outer-spin-button,
+#screen-time-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-area {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease;
+}
+
+.input-area.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Pantalla 8: Sección Tres (Reflexión) --- */
+#section-three-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    background: #0f0f0f;
+    align-items: center;
+    justify-content: center;
+    z-index: 130;
+}
+
+/* --- Pantalla 9: Sección Cuatro (El Desafío) --- */
+#section-four-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    background: #0f0f0f;
+    align-items: center;
+    justify-content: center;
+    z-index: 135;
+}
+
+#pledge-input {
+    background: transparent;
+    border: none;
+    border-bottom: 2px dashed #444;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+#pledge-input:focus {
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* Efecto cuando escribe la frase correcta */
+.pledge-success {
+    color: #fff !important;
+    border-bottom-color: transparent !important;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* --- Pantalla 10: Cierre Épico --- */
+#epic-finale-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    background: #000; /* Negro absoluto */
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+/* --- Pantalla 10: Ajuste para evitar que crezca --- */
+/* --- Pantalla 10: Cierre Épico (Corregido) --- */
+#epic-finale-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    background: #000;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+#epic-finale-screen .reflection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    height: 450px; /* Reservamos la altura total para que no salte al aparecer el botón */
+}
+
+#finale-text {
+    font-size: 1.8rem;
+    line-height: 1.6;
+    text-align: center;
+    border: none;
+    min-height: 200px; /* Altura mínima para que el espacio del texto ya exista */
+    margin-bottom: 2rem;
+}
+
+#coming-soon-btn {
+    opacity: 0;
+    display: none; /* Empezamos totalmente oculto */
+    pointer-events: none;
+    transition: opacity 2s ease;
+}
