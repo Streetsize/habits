@@ -1,0 +1,232 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0f0f0f;
+    color: #e0e0e0;
+    font-family: 'Courier New', Courier, monospace;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Pantalla 1: Inicio --- */
+.hero-container {
+    z-index: 10;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+#glitch-title {
+    font-size: 2.2rem;
+    margin-bottom: 4.5rem; /* Espacio aumentado */
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 5.5rem; /* Espacio aumentado */
+    color: #b0b0b0;
+    display: block;
+}
+
+.typewriter-btn {
+    background: transparent;
+    color: #e0e0e0;
+    border: 1px solid #e0e0e0;
+    padding: 12px 30px;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.typewriter-btn:hover {
+    background: #e0e0e0;
+    color: #0f0f0f;
+}
+
+/* --- Capas Globales --- */
+#transition-overlay, #scroll-screen, #reflection-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    background: #0f0f0f;
+    align-items: center;
+    justify-content: center;
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.expanding-circle {
+    border: 2px solid rgba(224, 224, 224, 0.4);
+    border-radius: 50%;
+    position: absolute;
+    width: 1px; height: 1px;
+    z-index: 101;
+}
+
+.animate-circle {
+    animation: circleGrow 1.5s ease-out forwards;
+}
+
+@keyframes circleGrow {
+    0% { width: 1px; height: 1px; opacity: 1; }
+    100% { width: 300vmax; height: 300vmax; opacity: 0; border-width: 10px; }
+}
+
+/* --- Pantalla 2: Glitch Agresivo --- */
+#final-text-container {
+    opacity: 0;
+    z-index: 102;
+    transition: opacity 0.5s;
+}
+
+#question-text {
+    font-size: 3rem;
+    letter-spacing: 5px;
+}
+
+/* --- Pantalla 3: Scroll TikTok --- */
+#scroll-screen {
+    overflow: hidden;
+    align-items: flex-start;
+}
+
+#scroll-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+#slide-track {
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.tiktok-ui {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 105;
+    pointer-events: none;
+}
+
+.side-icons {
+    position: absolute;
+    right: 15px;
+    bottom: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.icon {
+    font-size: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon svg {
+    width: 32px;
+    height: 32px;
+    color: #ffffff;
+    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.6));
+    margin-bottom: 4px;
+}
+
+.icon span {
+    font-size: 0.7rem;
+    margin-top: 4px;
+}
+
+/* Botón Like Específico */
+.icon.heart-btn {
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+.icon.heart-btn.liked svg,
+.icon.heart-btn.liked svg path {
+    fill: #ff4444 !important;
+    stroke: #ff4444 !important;
+}
+
+.icon.heart-btn.liked svg {
+    animation: heart-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes heart-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+.bottom-info {
+    position: absolute;
+    left: 20px;
+    bottom: 40px;
+    text-align: left;
+}
+
+.username { font-weight: bold; margin-bottom: 5px; }
+.caption { font-size: 0.85rem; color: #ccc; }
+
+.progress-bar-container {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+#progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #fff;
+}
+
+/* --- Pantalla 4: Reflexión Final --- */
+.reflection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.reflection-text {
+    font-size: 1.4rem;
+    line-height: 1.8;
+    max-width: 600px;
+    padding: 20px;
+    white-space: pre-wrap;
+    margin-bottom: 3rem;
+}
+
+#readyBtn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s ease;
+}
+
+#readyBtn.show-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (max-width: 600px) {
+    #glitch-title { font-size: 1.8rem; margin-bottom: 3rem; }
+    .subtitle { font-size: 1rem; margin-bottom: 3.5rem; }
+}
