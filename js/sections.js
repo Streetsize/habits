@@ -27,21 +27,68 @@ if (btnReady) {
 }
 
 // =========================================================
-// --- SECCIÓN UNO (ARRASTRAR PALABRAS) ---
+// --- SECCIÓN UNO (INTRODUCCIÓN + ARRASTRAR PALABRAS) ---
 // =========================================================
 
+// --- 1. DATOS DE LOS TEXTOS INTRODUCTORIOS ---
+// --- 1. DATOS DE LOS TEXTOS INTRODUCTORIOS CON FUENTES ---
+const sectionOneIntroData = [
+    {
+        text: "La Unión Europea actualmente está llevando a cabo una ofensiva legal sin precedentes contra el denominado 'diseño adictivo'.",
+        link: "https://www.theguardian.com/technology/2025/nov/26/social-media-ban-under-16s-european-parliament-resolution#:~:text=Su%20informe%20solicitaba%20la%20desactivaci%C3%B3n%20por%20defecto,j%C3%B3venes%20presentaba%20un%20uso%20%C2%ABproblem%C3%A1tico%C2%BB%20o%20%C2%ABdisfuncional%C2%BB"
+    },
+    {
+        text: "En febrero de 2026, se dictaminó que cierta empresa líder de contenido rápido ha violado sistemáticamente la Ley de Servicios Digitales.",
+        link: "https://ec.europa.eu/newsroom/comm_rep_es/items/921620/es" // Fuente sobre la investigación formal de la CE
+    },
+    {
+        text: "Para finales de este año, se está preparando una nueva legislación estricta para desmantelar los patrones de su algoritmo.",
+        link: "https://dig.watch/updates/dutch-court-increases-pressure-on-meta-over-non-profiling-social-media-feeds#:~:text=The%20court%20concluded%20that%20the%20automatic%20resetting,transparency%20and%20user%20control%20over%20recommendation%20systems."
+    },
+    {
+        text: "Por su parte, un exingeniero de otra gran plataforma testificó bajo juramento ante el Senado de EE.UU.",
+        link: "https://www.abc.es/tecnologia/arturo-bejar-exdirectivo-meta-instagram-ensenando-videos-20260327043309-nt.html"
+    },
+    {
+        text: "Afirmó haber enviado correos personales a altos directivos advirtiendo del daño psicológico de sus funciones adictivas. Fue ignorado y minimizado.",
+    },
+    {
+        text: "Mientras tanto, el gran país asiático de donde se origina una de estas plataformas, utiliza internamente un algoritmo completamente distinto (enfocado en ciencia y arte) al que nos proporcionan a nosotros. ",
+    },
+	{
+        text: "...Para su mercado interno ofrecen una versión de 'espinacas' mientras que para el resto del mundo exportan opio. Cita textual de Tristan Harris (ex-diseñador de ética de Google)",
+        link: "https://www.cbsnews.com/news/tiktok-cybersecurity-china-60-minutes-2020-11-15/"
+    },
+		{
+        text: "¿Por qué?",       
+    },
+	{
+        text: "Y a nosotros, que no residimos ni en Estados Unidos ni en Europa... ¿Quién nos protege?",
+    },
+	{
+        text: "Quiero aportar un grano de arena y darte la información cruda y las herramientas para que tú mismo tomes el mando de tu tiempo.",
+    },
+];
+
+// --- 2. DATOS DEL JUEGO DE ARRASTRAR ---
 const sectionOneData = [
-    { type: "text", content: "El diseño actual de la tecnología exige un peaje alto. El adulto promedio pasa más de " },
+    { isNewGroup: true, type: "text", content: "El diseño actual de la tecnología exige un peaje alto. El adulto promedio pasa más de " },
     { type: "blank", options: ["2 horas", "6 horas"], correct: "6 horas" },
-    { type: "text", content: " al día mirando una pantalla. No estamos aprendiendo ni creando; la mayor parte de este tiempo es un consumo " },
+    { type: "text", content: " al día mirando una pantalla. " },
+    
+    { isNewGroup: true, type: "text", content: "No estamos aprendiendo ni creando; la mayor parte de este tiempo es un consumo " },
     { type: "blank", options: ["activo", "pasivo"], correct: "pasivo" },
-    { type: "text", content: " que alimenta algoritmos. A largo plazo, esta inyección constante de dopamina superficial eleva nuestros niveles de " },
+    { type: "text", content: " que alimenta algoritmos. " },
+    
+    { isNewGroup: true, type: "text", content: "A largo plazo, esta inyección constante de dopamina superficial eleva nuestros niveles de " },
     { type: "blank", options: ["creatividad", "ansiedad"], correct: "ansiedad" },
     { type: "text", content: "." }
 ];
 
+let currentSec1IntroStep = 0;
 let currentGameStep = 0;
 let sectionOneCompleted = false; 
+let currentSentenceGroup = null; 
 
 const btnSectionOne = document.getElementById('btn-sec-1');
 if (btnSectionOne) {
@@ -54,13 +101,102 @@ if (btnSectionOne) {
             mScreen.style.display = 'none';
             mScreen.style.opacity = '1'; 
             document.getElementById('section-one-screen').style.display = 'flex';
-            startGame();
+            
+            // Iniciamos primero la introducción
+            startSectionOneIntro();
         }, tiempos.menuFadeOut);
     });
 }
 
+// --- LÓGICA DE LA INTRODUCCIÓN ---
+function startSectionOneIntro() {
+    document.getElementById('sec1-intro-container').style.display = 'flex';
+    document.getElementById('sec1-intro-container').style.opacity = '1';
+    document.getElementById('sec1-game-container').style.display = 'none';
+    currentSec1IntroStep = 0;
+    playSec1IntroParagraph();
+}
+
+function playSec1IntroParagraph() {
+    const out = document.getElementById('sec1-intro-text');
+    const oldBtn = document.getElementById('sec1-next-btn');
+    const activeBtn = oldBtn.cloneNode(true);
+    oldBtn.parentNode.replaceChild(activeBtn, oldBtn);
+    
+    activeBtn.style.opacity = '0';
+    activeBtn.style.pointerEvents = 'none';
+    out.style.opacity = '1';
+    out.innerHTML = "";
+    
+    // Detectamos si es un string simple o un objeto con link
+    const currentItem = sectionOneIntroData[currentSec1IntroStep];
+    const msg = (typeof currentItem === 'string') ? currentItem : currentItem.text;
+    
+    let charIndex = 0;
+    
+    function typeChar() {
+        if (charIndex < msg.length) {
+            out.innerHTML += msg.charAt(charIndex);
+            charIndex++;
+            let speed = tiempos.reflectionSpeedNormal;
+            if (msg.charAt(charIndex-1) === ".") speed = tiempos.reflectionSpeedPunto;
+            else if (msg.charAt(charIndex-1) === ",") speed = tiempos.reflectionSpeedComa;
+            setTimeout(typeChar, speed);
+        } else {
+            // AL TERMINAR EL TEXTO:
+            if (currentItem.link) {
+                const linkWrap = document.createElement('span');
+                linkWrap.innerHTML = ` <a href="${currentItem.link}" target="_blank" class="fact-link"> [Ver fuente]</a>`;
+                out.appendChild(linkWrap);
+            }
+
+            setTimeout(() => {
+                activeBtn.style.opacity = '1';
+                activeBtn.style.pointerEvents = 'auto';
+                activeBtn.addEventListener('click', () => {
+                    if (currentSec1IntroStep < sectionOneIntroData.length - 1) {
+                        out.style.transition = `opacity ${tiempos.reflectionFadeOut / 1000}s ease`;
+                        out.style.opacity = '0';
+                        activeBtn.style.opacity = '0';
+                        setTimeout(() => {
+                            currentSec1IntroStep++;
+                            playSec1IntroParagraph();
+                        }, tiempos.reflectionFadeOut);
+                    } else {
+                        transitionToGame();
+                    }
+                });
+            }, 500);
+        }
+    }
+    typeChar();
+}
+
+// --- TRANSICIÓN SUAVE DE LA INTRO AL JUEGO ---
+function transitionToGame() {
+    const introContainer = document.getElementById('sec1-intro-container');
+    const gameContainer = document.getElementById('sec1-game-container');
+    
+    introContainer.style.transition = 'opacity 0.8s ease';
+    introContainer.style.opacity = '0';
+    
+    setTimeout(() => {
+        introContainer.style.display = 'none';
+        gameContainer.style.display = 'flex';
+        
+        setTimeout(() => {
+            gameContainer.style.transition = 'opacity 0.8s ease';
+            gameContainer.style.opacity = '1';
+            startGame();
+        }, 50);
+        
+    }, 800);
+}
+
+// --- LÓGICA DEL JUEGO DE ARRASTRAR ---
 function startGame() {
     currentGameStep = 0;
+    currentSentenceGroup = null; 
     const storyEl = document.getElementById('story-text');
     const optionsEl = document.getElementById('options-container');
     if(!storyEl || !optionsEl) return;
@@ -98,6 +234,7 @@ function processGameStep() {
             }
 
             const gameScreen = document.getElementById('section-one-screen');
+            const mScreen = document.getElementById('menu-screen');
             if(gameScreen) {
                 gameScreen.style.transition = 'opacity 0.8s ease';
                 gameScreen.style.opacity = '0';
@@ -106,7 +243,10 @@ function processGameStep() {
             setTimeout(() => {
                 if(gameScreen) gameScreen.style.display = 'none';
                 if(gameScreen) gameScreen.style.opacity = '1';
-                document.getElementById('menu-screen').style.display = 'flex';
+                if(mScreen) {
+                    mScreen.style.display = 'flex';
+                    mScreen.style.opacity = '1';
+                }
             }, tiempos.menuFadeOut);
 
         }, 2000);
@@ -115,10 +255,24 @@ function processGameStep() {
 
     const stepData = sectionOneData[currentGameStep];
 
+    if (stepData.isNewGroup || !currentSentenceGroup) {
+        currentSentenceGroup = document.createElement('span');
+        currentSentenceGroup.className = 'sentence-group';
+        currentSentenceGroup.style.transition = 'opacity 0.8s ease';
+        storyEl.appendChild(currentSentenceGroup);
+
+        const groups = storyEl.querySelectorAll('.sentence-group');
+        if (groups.length > 2) {
+            const oldestGroup = groups[groups.length - 3];
+            oldestGroup.style.opacity = '0';
+            setTimeout(() => { oldestGroup.style.display = 'none'; }, 800); 
+        }
+    }
+
     if (stepData.type === "text") {
         let i = 0;
         const textSpan = document.createElement('span');
-        storyEl.appendChild(textSpan);
+        currentSentenceGroup.appendChild(textSpan);
 
         const interval = setInterval(() => {
             if (i < stepData.content.length) {
@@ -134,7 +288,7 @@ function processGameStep() {
     } else if (stepData.type === "blank") {
         const dropZone = document.createElement('span');
         dropZone.className = 'drop-zone';
-        storyEl.appendChild(dropZone);
+        currentSentenceGroup.appendChild(dropZone);
 
         const shuffledOptions = [...stepData.options].sort(() => Math.random() - 0.5);
         optionsEl.innerHTML = '';
@@ -457,7 +611,7 @@ function finishSectionThree() {
 }
 
 // =========================================================
-// --- SECCIÓN CUATRO (DESAFÍO FINAL Y ATAJO) ---
+// --- SECCIÓN CUATRO (DESAFÍO FINAL Y ATAJO ADMIN) ---
 // =========================================================
 
 const pledges = [
@@ -482,19 +636,62 @@ if (btnSectionFour) {
             mScreen.style.display = 'none';
             document.getElementById('section-four-screen').style.display = 'flex';
             currentPledgeStep = 0;
-            updatePledgeUI();
             
             const pInput = document.getElementById('pledge-input');
             pInput.value = "";
-            pInput.disabled = false;
-            pInput.focus();
+            pInput.classList.remove('pledge-success');
+            
+            // Bloqueamos el input mientras la máquina de escribir hace su trabajo
+            pInput.disabled = true; 
+            
+            updatePledgeUI(() => {
+                pInput.disabled = false;
+                pInput.focus();
+            });
         }, tiempos.menuFadeOut);
     });
 }
 
-function updatePledgeUI() {
-    document.getElementById('pledge-prompt').innerHTML = pledges[currentPledgeStep].prompt;
-    document.getElementById('pledge-target-text').innerText = `"${pledges[currentPledgeStep].target}"`;
+function updatePledgeUI(onComplete) {
+    const promptEl = document.getElementById('pledge-prompt');
+    const targetEl = document.getElementById('pledge-target-text');
+    const currentPledge = pledges[currentPledgeStep];
+
+    promptEl.innerHTML = "";
+    targetEl.innerText = ""; 
+
+    let msg = currentPledge.prompt;
+    let i = 0;
+    let speed = 25; // Velocidad rápida (25ms) para mantener la atención sin aburrir
+
+    function typePledge() {
+        if (i < msg.length) {
+            // Si detecta un código HTML (como <br>), lo imprime de golpe para no romper el texto
+            if (msg.charAt(i) === '<') {
+                let tagEnd = msg.indexOf('>', i);
+                if (tagEnd !== -1) {
+                    promptEl.innerHTML += msg.substring(i, tagEnd + 1);
+                    i = tagEnd + 1;
+                }
+            } else {
+                promptEl.innerHTML += msg.charAt(i);
+                i++;
+            }
+            setTimeout(typePledge, speed);
+        } else {
+            // Al terminar de escribir, aparece suavemente la frase objetivo
+            targetEl.style.opacity = '0';
+            targetEl.innerText = `"${currentPledge.target}"`;
+            targetEl.style.transition = 'opacity 0.6s ease';
+            
+            setTimeout(() => {
+                targetEl.style.opacity = '1';
+                if (onComplete) onComplete(); // Dispara la reactivación del teclado
+            }, 50);
+        }
+    }
+    
+    typePledge();
 }
 
 const pledgeInput = document.getElementById('pledge-input');
@@ -519,13 +716,18 @@ if (pledgeInput) {
                     this.style.opacity = '0';
                     
                     setTimeout(() => {
-                        updatePledgeUI();
                         this.value = "";
                         this.classList.remove('pledge-success');
                         pContent.style.opacity = '1';
                         this.style.opacity = '1';
-                        this.disabled = false;
-                        this.focus();
+                        
+                        // Bloquear nuevamente para la siguiente animación
+                        this.disabled = true;
+                        
+                        updatePledgeUI(() => {
+                            this.disabled = false;
+                            this.focus();
+                        });
                     }, 500);
                 } else {
                     sectionFourCompleted = true;

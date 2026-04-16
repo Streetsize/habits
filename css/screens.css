@@ -117,5 +117,5 @@
     opacity: 0;
     display: none;
     pointer-events: none;
-    transition: opacity 2s ease;
+    transition: opacity 4s ease;
 }

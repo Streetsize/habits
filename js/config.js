@@ -3,7 +3,7 @@
 // ==========================================
 
 // ⚡ Modo de Pruebas (Cambiar a false antes de publicar)
-const DEV_MODE = false; 
+const DEV_MODE = true; 
 
 // Tabla de control de tiempos (Velocidad de animaciones)
 const tiempos = {

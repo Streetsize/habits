@@ -268,4 +268,26 @@
     40%, 80% { transform: translateX(5px); }
 }
 
+/* --- Estilo para los links de verificación de hechos --- */
+.fact-link {
+    color: #888; /* Gris sutil por defecto */
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-style: italic;
+    border-bottom: 1px solid transparent;
+    transition: all 0.4s ease;
+    display: inline-block;
+    margin-left: 10px;
+    animation: linkFadeIn 1s ease forwards;
+}
 
+.fact-link:hover {
+    color: #e0e0e0; /* Se ilumina al pasar el mouse */
+    border-bottom-color: #e0e0e0;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes linkFadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
