@@ -119,3 +119,70 @@
     pointer-events: none;
     transition: opacity 4s ease;
 }
+
+/* --- Modal de Broma --- */
+#prank-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prank-modal {
+    background: #0f0f0f;
+    border: 1px solid #444;
+    padding: 40px;
+    text-align: center;
+    max-width: 400px;
+    position: relative; /* Necesario para que el botón se mueva dentro */
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.prank-btns {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Estilo para que el botón "Aceptar" pueda saltar */
+#accept-prank-btn {
+    position: relative; /* Indispensable para que el translate funcione */
+    display: inline-block;
+    transition: transform 0.1s ease-out; /* Un movimiento casi instantáneo */
+    z-index: 10;
+}
+
+/* --- Botón de Reinicio (Borrar Memoria) --- */
+#reset-progress-btn {
+    background: transparent;
+    border: none;
+    color: #555; /* Gris muy sutil */
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    margin-top: 25px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: all 0.3s ease;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (hover: hover) {
+    #reset-progress-btn:hover {
+        color: #e0e0e0;
+        text-decoration-color: #e0e0e0;
+    }
+}
+
+#reset-progress-btn:active {
+    transform: scale(0.95);
+}

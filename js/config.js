@@ -17,10 +17,10 @@ const tiempos = {
     scrollFadeOutEnd: DEV_MODE ? 10 : 600,
     scrollPauseBeforeReflection: DEV_MODE ? 10 : 1800,
     scrollReadingTime: DEV_MODE ? 10 : 1400,
-    typewriterSpeed: DEV_MODE ? 1 : 60,
+    typewriterSpeed: DEV_MODE ? 1 : 50,
     reflectionSpeedNormal: DEV_MODE ? 1 : 50,
-    reflectionSpeedComa: DEV_MODE ? 1 : 400,
-    reflectionSpeedPunto: DEV_MODE ? 1 : 800,
+    reflectionSpeedComa: DEV_MODE ? 1 : 300,
+    reflectionSpeedPunto: DEV_MODE ? 1 : 600,
     reflectionPauseBeforeMenu: DEV_MODE ? 10 : 1000,
     menuFadeOut: DEV_MODE ? 10 : 800,
     reflectionPauseBetweenParagraphs: DEV_MODE ? 10 : 2500,
@@ -43,5 +43,30 @@ const identities = [
 	"Bueno... son generados por IA ¿Importa?"
 ];
 
-// Variable global que guarda el progreso del usuario
-let playerScore = 0;
+// ==========================================
+// SISTEMA DE GUARDADO (LOCALSTORAGE)
+// ==========================================
+
+// Leer la memoria del navegador o crear una nueva si es la primera vez
+let savedProgress = JSON.parse(localStorage.getItem('scrollProgress')) || {
+    s1: false, s2: false, s3: false, s4: false, score: 0
+};
+
+// Asignar los valores guardados a las variables globales
+let playerScore = savedProgress.score;
+let sectionOneCompleted = savedProgress.s1;
+let sectionTwoCompleted = savedProgress.s2;
+let sectionThreeCompleted = savedProgress.s3;
+let sectionFourCompleted = savedProgress.s4;
+
+// Función que llamaremos cada vez que se gane un punto
+function saveProgress() {
+    const progress = {
+        s1: sectionOneCompleted,
+        s2: sectionTwoCompleted,
+        s3: sectionThreeCompleted,
+        s4: sectionFourCompleted,
+        score: playerScore
+    };
+    localStorage.setItem('scrollProgress', JSON.stringify(progress));
+}

@@ -18,8 +18,10 @@
             <h1 id="glitch-title" class="glitch-target">Scroll</h1>
             <p class="subtitle glitch-target">Mi objetivo es transformar la salud mediante la mejora consciente de los hábitos diarios.</p>
             <button id="startBtn" class="typewriter-btn">Comencemos</button>
+			<button id="reset-progress-btn" style="display: none;">Reiniciar tareas</button>
         </section>
     </main>
+	
 
     <div id="transition-overlay">
         <div class="expanding-circle"></div>
@@ -172,6 +174,18 @@
 			</button>
 		</div>
 	</div>
+	
+	<div id="prank-modal-overlay" style="display: none;">
+    <div class="prank-modal">
+        <p class="reflection-text" style="font-size: 1.1rem; margin-bottom: 2rem;">
+            ¿Y si mejor tomamos una pausa para ver videos?
+        </p>
+			<div class="prank-btns">
+				<button id="accept-prank-btn" class="typewriter-btn">Aceptar</button>
+				<button id="reject-prank-btn" class="typewriter-btn">Rechazar</button>
+			</div>
+    </div>
+</div>
 
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>

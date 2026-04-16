@@ -1,6 +1,39 @@
 // ==========================================
 // MOTOR INTERACTIVO: MENÚ Y SECCIONES 1 AL 4
 // ==========================================
+function markBtnAsCompleted(btnId) {
+    const btn = document.getElementById(btnId);
+    if (btn && !btn.querySelector('.check-icon')) {
+        const tickSVG = `
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>`;
+        btn.insertAdjacentHTML('beforeend', tickSVG);
+    }
+}
+
+// --- RESTAURAR ESTADO VISUAL DEL MENÚ ---
+function restoreMenuState() {
+    if (sectionOneCompleted) {
+        markBtnAsCompleted('btn-sec-1');
+        const b2 = document.getElementById('btn-sec-2');
+        if(b2) { b2.classList.remove('locked'); const i = b2.querySelector('.lock-icon'); if(i) i.remove(); }
+    }
+    if (sectionTwoCompleted) {
+        markBtnAsCompleted('btn-sec-2');
+        const b3 = document.getElementById('btn-sec-3');
+        if(b3) { b3.classList.remove('locked'); const i = b3.querySelector('.lock-icon'); if(i) i.remove(); }
+    }
+    if (sectionThreeCompleted) {
+        markBtnAsCompleted('btn-sec-3');
+        const b4 = document.getElementById('btn-sec-4');
+        if(b4) { b4.classList.remove('locked'); const i = b4.querySelector('.lock-icon'); if(i) i.remove(); }
+    }
+    if (sectionFourCompleted) {
+        markBtnAsCompleted('btn-sec-4');
+    }
+}
+restoreMenuState(); // Ejecutar al cargar la página
 
 // --- LÓGICA DEL MENÚ PRINCIPAL ---
 const btnReady = document.getElementById('readyBtn');
@@ -10,18 +43,26 @@ const menuBtns = document.querySelectorAll('.menu-btn');
 
 if (btnReady) {
     btnReady.addEventListener('click', () => {
+        // Al hacer clic, ocultamos la pantalla de reflexión
         if(reflectionScreen) {
             reflectionScreen.style.transition = 'opacity 0.8s ease';
             reflectionScreen.style.opacity = '0';
         }
         
+        // Y mostramos el menú principal
         setTimeout(() => {
             if(reflectionScreen) reflectionScreen.style.display = 'none';
             if(menuScreen) {
                 menuScreen.style.display = 'flex';
                 menuScreen.style.opacity = '1';
             }
+            // Agregamos la clase de animación a los botones del menú
             menuBtns.forEach(btn => btn.classList.add('cascade-in'));
+            
+            // Forzamos la actualización del puntaje visual por si hay datos guardados
+            const scoreUI = document.getElementById('score-value');
+            if(scoreUI) scoreUI.innerText = playerScore;
+            
         }, tiempos.menuFadeOut);
     });
 }
@@ -82,12 +123,15 @@ const sectionOneData = [
     
     { isNewGroup: true, type: "text", content: "A largo plazo, esta inyección constante de dopamina superficial eleva nuestros niveles de " },
     { type: "blank", options: ["creatividad", "ansiedad"], correct: "ansiedad" },
+    { type: "text", content: "." },
+	
+	{ isNewGroup: true, type: "text", content: "y daña gravemente nuestra " },
+    { type: "blank", options: ["atención", "posesión"], correct: "atención" },
     { type: "text", content: "." }
 ];
 
 let currentSec1IntroStep = 0;
 let currentGameStep = 0;
-let sectionOneCompleted = false; 
 let currentSentenceGroup = null; 
 
 const btnSectionOne = document.getElementById('btn-sec-1');
@@ -138,7 +182,7 @@ function playSec1IntroParagraph() {
         if (charIndex < msg.length) {
             out.innerHTML += msg.charAt(charIndex);
             charIndex++;
-            let speed = tiempos.reflectionSpeedNormal;
+            let speed = tiempos.typewriterSpeed;
             if (msg.charAt(charIndex-1) === ".") speed = tiempos.reflectionSpeedPunto;
             else if (msg.charAt(charIndex-1) === ",") speed = tiempos.reflectionSpeedComa;
             setTimeout(typeChar, speed);
@@ -217,6 +261,8 @@ function processGameStep() {
             if (!sectionOneCompleted) {
                 sectionOneCompleted = true;
                 playerScore += 1;
+				markBtnAsCompleted('btn-sec-1');
+				saveProgress();
                 
                 const scoreUI = document.getElementById('score-value');
                 if(scoreUI) {
@@ -342,7 +388,6 @@ function evaluateAnswer(selectedWord, element, dropZone, correctWord) {
 // --- SECCIÓN DOS (TIEMPO DE PANTALLA Y ESTADÍSTICAS) ---
 // =========================================================
 
-let sectionTwoCompleted = false;
 
 const btnSectionTwo = document.getElementById('btn-sec-2');
 if (btnSectionTwo) {
@@ -443,58 +488,110 @@ if (screenTimeInput && screenTimeFeedback) {
 }
 
 // --- LOGICA DEL BOTON CONFIRMAR ---
+// --- MODIFICACIÓN EN SECCIÓN DOS ---
 const submitTimeBtn = document.getElementById('submit-time-btn');
 if (submitTimeBtn) {
     submitTimeBtn.addEventListener('click', () => {
         const input = document.getElementById('screen-time-input');
-        
-        if (!input || input.value === "" || parseFloat(input.value) < 0) {
-            if(input) input.style.borderColor = "#ff4444";
-            return;
-        }
+        if (!input || input.value === "" || parseFloat(input.value) < 0) return;
 
-        if (!sectionTwoCompleted) {
-            sectionTwoCompleted = true;
-            playerScore += 1;
-            
-            const scoreUI = document.getElementById('score-value');
-            if(scoreUI) {
-                scoreUI.innerText = playerScore;
-                scoreUI.classList.add('score-highlight');
-                setTimeout(() => scoreUI.classList.remove('score-highlight'), 1000);
-            }
-
-            // Desbloqueamos la sección 3 buscando su ID (Mucho más seguro)
-            const btnSec3 = document.getElementById('btn-sec-3'); 
-            if(btnSec3) {
-                btnSec3.classList.remove('locked');
-                const lockIcon = btnSec3.querySelector('.lock-icon');
-                if (lockIcon) lockIcon.remove();
-            }
-        }
-
-        const screen2 = document.getElementById('section-two-screen');
-        const mScreen = document.getElementById('menu-screen');
-        
-        if(screen2 && mScreen) {
-            screen2.style.transition = 'opacity 0.8s ease';
-            screen2.style.opacity = '0';
-            
-            setTimeout(() => {
-                screen2.style.display = 'none';
-                screen2.style.opacity = '1';
-                mScreen.style.display = 'flex';
-                mScreen.style.opacity = '1'; // Forzamos que vuelva a ser visible
-            }, tiempos.menuFadeOut);
-        }
+        // En lugar de cerrar la pantalla, mostramos el cartel de Scroll
+        showPrankModal();
     });
+}
+
+function showPrankModal() {
+    const overlay = document.getElementById('prank-modal-overlay');
+    const btnAccept = document.getElementById('accept-prank-btn');
+    const btnReject = document.getElementById('reject-prank-btn');
+    
+    overlay.style.display = 'flex';
+
+    // Forzamos el comportamiento dinámico desde JS para evitar que el CSS lo bloquee
+    btnAccept.style.transition = 'transform 0.15s ease-out';
+    btnAccept.style.position = 'relative';
+
+    const moveButton = (e) => {
+        if (e) e.preventDefault();
+        
+        // Calculamos un salto seguro independiente del tamaño de la pantalla
+        // Saltará entre 60 y 150 píxeles hacia cualquier dirección
+        const xDir = Math.random() < 0.5 ? -1 : 1;
+        const yDir = Math.random() < 0.5 ? -1 : 1;
+        
+        const randomX = (Math.floor(Math.random() * 100) + 60) * xDir;
+        const randomY = (Math.floor(Math.random() * 60) + 40) * yDir;
+
+        // Aplicamos el movimiento
+        btnAccept.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    };
+
+    // Atacamos el botón con múltiples eventos por si el navegador bloquea alguno
+    btnAccept.addEventListener('mouseover', moveButton);
+    btnAccept.addEventListener('mouseenter', moveButton);
+    btnAccept.addEventListener('click', moveButton);
+    
+    // El escudo para pantallas táctiles (cuando lo subas al celular)
+    btnAccept.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        moveButton();
+    }, { passive: false });
+
+    // La única salida posible
+    btnReject.onclick = () => {
+        overlay.style.display = 'none';
+        finishSectionTwoLogic(); 
+    };
+}
+
+// Mueve la lógica que tenías antes aquí para que se ejecute al rechazar
+function finishSectionTwoLogic() {
+    if (!sectionTwoCompleted) {
+        sectionTwoCompleted = true;
+        playerScore += 1;
+		saveProgress();
+
+        // 1. Actualizar el marcador visual de puntos
+        const scoreUI = document.getElementById('score-value');
+        if (scoreUI) {
+            scoreUI.innerText = playerScore;
+            scoreUI.classList.add('score-highlight');
+            setTimeout(() => scoreUI.classList.remove('score-highlight'), 1000);
+        }
+
+        // 2. Poner el tick verde en el botón de la sección 2
+        markBtnAsCompleted('btn-sec-2');
+
+        // 3. Desbloquear la sección 3 (quitar clase y borrar el candado)
+        const btnSec3 = document.getElementById('btn-sec-3'); 
+        if (btnSec3) {
+            btnSec3.classList.remove('locked');
+            const lockIcon = btnSec3.querySelector('.lock-icon');
+            if (lockIcon) lockIcon.remove();
+        }
+    }
+
+    // 4. Animación de regreso al menú
+    const screen2 = document.getElementById('section-two-screen');
+    const mScreen = document.getElementById('menu-screen');
+    
+    if(screen2 && mScreen) {
+        screen2.style.transition = 'opacity 0.8s ease';
+        screen2.style.opacity = '0';
+        
+        setTimeout(() => {
+            screen2.style.display = 'none';
+            screen2.style.opacity = '1';
+            mScreen.style.display = 'flex';
+            mScreen.style.opacity = '1';
+        }, tiempos.menuFadeOut);
+    }
 }
 
 // =========================================================
 // --- SECCIÓN TRES (TEXTOS REFLEXIVOS) ---
 // =========================================================
 
-let sectionThreeCompleted = false;
 const parrafosReflexion = [
     "El diseño de estas plataformas no es accidental.",
     "Cada color, cada notificación y cada scroll infinito está clínicamente calibrado para hackear tu sistema de recompensa.",
@@ -581,6 +678,8 @@ function finishSectionThree() {
     if (!sectionThreeCompleted) {
         sectionThreeCompleted = true;
         playerScore += 1;
+		saveProgress();
+		markBtnAsCompleted('btn-sec-3');
         
         const scoreUI = document.getElementById('score-value');
         if(scoreUI) scoreUI.innerText = playerScore;
@@ -621,7 +720,7 @@ const pledges = [
 ];
 
 let currentPledgeStep = 0;
-let sectionFourCompleted = false;
+
 
 const btnSectionFour = document.getElementById('btn-sec-4'); 
 if (btnSectionFour) {
@@ -662,7 +761,7 @@ function updatePledgeUI(onComplete) {
 
     let msg = currentPledge.prompt;
     let i = 0;
-    let speed = 25; // Velocidad rápida (25ms) para mantener la atención sin aburrir
+    let speed = tiempos.typewriterSpeed; 
 
     function typePledge() {
         if (i < msg.length) {
@@ -731,6 +830,8 @@ if (pledgeInput) {
                     }, 500);
                 } else {
                     sectionFourCompleted = true;
+					playerScore += 1;
+					saveProgress();
                     setTimeout(triggerEpicFinale, 1000);
                 }
             }, 800);

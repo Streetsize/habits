@@ -39,10 +39,70 @@ let initialGlitch = setInterval(() => {
 
 }, tiempoEntreFallas);
 
+// --- LÓGICA DEL BOTÓN DE REINICIO ---
+const resetBtn = document.getElementById('reset-progress-btn');
+
+if (resetBtn) {
+    // Solo lo hacemos visible si el usuario ya completó el desafío final
+    if (sectionFourCompleted) {
+        resetBtn.style.display = 'block';
+    }
+
+    resetBtn.addEventListener('click', () => {
+        // Borramos la memoria permanente del navegador
+        localStorage.removeItem('scrollProgress');
+        
+        // Efecto visual de desvanecimiento
+        document.getElementById('home-screen').style.opacity = '0';
+        
+        // Recargamos la página desde cero a los 500ms
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
+    });
+}
+
+
 // --- FASE 2: EVENTO BOTÓN INICIO ---
 const startBtn = document.getElementById('startBtn');
 if (startBtn) {
+    // 1. Cambiar el texto del botón según el progreso guardado
+    if (sectionFourCompleted) {
+        startBtn.innerText = "Ir al sitio web";
+    } else if (sectionOneCompleted || sectionTwoCompleted || sectionThreeCompleted) {
+        startBtn.innerText = "Ir a las tareas";
+    }
+
     startBtn.addEventListener('click', function() {
+        const bgMusic = document.getElementById('bg-music');
+        if (bgMusic && !bgMusic.muted) {
+            bgMusic.play().catch(e => console.log(e));
+        }
+
+        // CASO A: Ya terminó todo el proyecto
+        if (sectionFourCompleted) {
+            // Reemplaza esto con tu URL real
+            window.location.href = "https://www.google.com"; 
+            return;
+        }
+
+        // CASO B: Tiene progreso a medias (Salta el glitch y va al menú)
+        if (sectionOneCompleted || sectionTwoCompleted || sectionThreeCompleted) {
+            clearInterval(initialGlitch);
+            document.getElementById('home-screen').style.display = 'none';
+            const menuScreen = document.getElementById('menu-screen');
+            if (menuScreen) {
+                menuScreen.style.display = 'flex';
+                menuScreen.style.opacity = '1';
+            }
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.add('cascade-in'));
+            
+            const scoreUI = document.getElementById('score-value');
+            if(scoreUI) scoreUI.innerText = playerScore;
+            return;
+        }
+
+        // CASO C: Usuario nuevo (Comportamiento normal)
         clearInterval(initialGlitch);
         document.getElementById('home-screen').classList.add('fade-out');
         
@@ -164,14 +224,23 @@ function runScrollPhase() {
 }
 
 // --- FASE 5: REFLEXIÓN INICIAL ---
+// --- FASE 5: REFLEXIÓN INICIAL (BOTÓN CORREGIDO) ---
 function runFinalReflection() {
     const screen = document.getElementById('reflection-screen');
     const out = document.getElementById('reflection-output');
     const readyBtn = document.getElementById('readyBtn');
     
     if(!screen || !out) return;
+    
     screen.style.display = 'flex';
     out.innerHTML = "";
+    
+    // Aseguramos que el botón esté oculto e intocable al inicio
+    if (readyBtn) {
+        readyBtn.style.opacity = '0';
+        readyBtn.style.pointerEvents = 'none';
+        readyBtn.style.transition = 'opacity 0.8s ease';
+    }
     
     const msg = "Hoy, estamos consumidos por el contenido rápido.\n\nY ellos lo saben, y así lo quieren.";
     let i = 0;
@@ -180,17 +249,24 @@ function runFinalReflection() {
         if (i < msg.length) {
             out.innerHTML += msg.charAt(i);
             i++;
+            // Usamos la velocidad normal que unificamos antes
             let speed = tiempos.reflectionSpeedNormal;
             if (msg.charAt(i-1) === ".") speed = tiempos.reflectionSpeedPunto;
             else if (msg.charAt(i-1) === ",") speed = tiempos.reflectionSpeedComa;
             
             setTimeout(type, speed);
         } else {
+            // El texto ha terminado. Esperamos 1.5 segundos (pausa dramática)
             setTimeout(() => {
-                if(readyBtn) readyBtn.classList.add('show-btn');
-            }, tiempos.reflectionPauseBeforeMenu);
+                if(readyBtn) {
+                    // Revelamos el botón
+                    readyBtn.style.opacity = '1';
+                    readyBtn.style.pointerEvents = 'auto'; // Lo hacemos clickeable de nuevo
+                }
+            }, 1500);
         }
     }
+    
     type();
 }
 
