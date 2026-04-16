@@ -1,0 +1,271 @@
+/* --- Botones Clásicos --- */
+/* --- Botones Clásicos --- */
+.typewriter-btn {
+    background: transparent;
+    color: #e0e0e0;
+    border: 1px solid #e0e0e0;
+    padding: 12px 30px;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    touch-action: manipulation; /* Anula el retraso táctil en celulares */
+}
+
+/* Solo hace el hover si el dispositivo tiene mouse */
+@media (hover: hover) {
+    .typewriter-btn:hover {
+        background: #e0e0e0;
+        color: #0f0f0f;
+    }
+    .menu-btn:not(.locked):hover {
+        background: #e0e0e0;
+        color: #0f0f0f;
+        border-color: #e0e0e0;
+    }
+}
+
+/* Efecto real al presionar con el dedo */
+.typewriter-btn:active, .menu-btn:not(.locked):active {
+    background: #e0e0e0;
+    color: #0f0f0f;
+    transform: scale(0.98); /* Pequeño hundimiento para dar feedback físico */
+}
+
+/* --- Botón Específico de la Sección 3 --- */
+#finish-sec3-btn {
+    opacity: 0;
+    pointer-events: none; /* Asegura que sea intocable mientras es invisible */
+    transition: opacity 0.4s ease;
+}
+
+#finish-sec3-btn.show-btn {
+    opacity: 1;
+    pointer-events: auto; /* Se vuelve tocable al aparecer */
+}
+
+/* --- Botones del Menú --- */
+.menu-btn {
+    background: transparent;
+    color: #e0e0e0;
+    border: 1px solid rgba(224, 224, 224, 0.3);
+    padding: 15px 40px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateY(-20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    user-select: none;
+    caret-color: transparent;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menu-btn:not(.locked):hover {
+    background: #e0e0e0;
+    color: #0f0f0f;
+    border-color: #e0e0e0;
+}
+
+.menu-btn.locked {
+    color: #666;
+    border-color: rgba(102, 102, 102, 0.2);
+    background: rgba(255, 255, 255, 0.02);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.lock-icon {
+    width: 18px;
+    height: 18px;
+    stroke: #555;
+    flex-shrink: 0;
+}
+
+/* --- Marcador de Puntos --- */
+.score-display {
+    color: #888;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+#score-value {
+    color: #e0e0e0;
+    font-weight: bold;
+    font-size: 1.3rem;
+    transition: color 0.3s ease;
+}
+
+.score-highlight {
+    color: #ff4444 !important;
+    text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+/* --- Iconos Sociales (TikTok UI) --- */
+.side-icons {
+    position: absolute;
+    right: 15px;
+    bottom: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.icon {
+    font-size: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+.icon svg {
+    width: 32px;
+    height: 32px;
+    color: #ffffff;
+    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.6));
+    margin-bottom: 4px;
+}
+
+.icon span { font-size: 0.7rem; margin-top: 4px; }
+
+.icon.heart-btn.liked svg,
+.icon.heart-btn.liked svg path {
+    fill: #ff4444 !important;
+    stroke: #ff4444 !important;
+}
+
+/* --- Elementos Interactivos Secciones 1, 2 y 4 --- */
+.drop-zone {
+    display: inline-block;
+    min-width: 120px;
+    height: 1.4rem;
+    border-bottom: 2px dashed #666;
+    margin: 0 10px;
+    vertical-align: bottom;
+    transition: all 0.3s;
+}
+
+.drop-zone.active {
+    border-color: #e0e0e0;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.drop-zone.filled {
+    border-bottom: none;
+    color: #fff;
+    font-weight: bold;
+    min-width: auto;
+}
+
+.drag-option {
+    border: 1px solid rgba(224, 224, 224, 0.3);
+    padding: 10px 25px;
+    cursor: grab;
+    background: transparent;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    user-select: none;
+    transition: all 0.3s;
+}
+
+.drag-option:active { cursor: grabbing; }
+
+.drag-option.wrong {
+    border-color: #ff4444;
+    color: #ff4444;
+    animation: shakeError 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+#screen-time-input, #pledge-input {
+    background: transparent;
+    border: none;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s;
+}
+
+#screen-time-input {
+    border-bottom: 1px solid #444;
+    font-size: 2.5rem;
+    width: 100px;
+}
+
+#screen-time-input:focus { border-color: #ff4444; }
+#screen-time-input::-webkit-outer-spin-button,
+#screen-time-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#pledge-input {
+    border-bottom: 2px dashed #444;
+    font-size: 1.5rem;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+}
+
+#pledge-input:focus { border-bottom: 2px solid #e0e0e0; }
+
+.pledge-success {
+    color: #fff !important;
+    border-bottom-color: transparent !important;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* --- Animaciones Clave (Keyframes) --- */
+.expanding-circle {
+    border: 2px solid rgba(224, 224, 224, 0.4);
+    border-radius: 50%;
+    position: absolute;
+    width: 1px; height: 1px;
+    z-index: 101;
+}
+
+.animate-circle { animation: circleGrow 1.5s ease-out forwards; }
+@keyframes circleGrow {
+    0% { width: 1px; height: 1px; opacity: 1; }
+    100% { width: 300vmax; height: 300vmax; opacity: 0; border-width: 10px; }
+}
+
+.cascade-in { animation: dropIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+@keyframes dropIn { to { opacity: 1; transform: translateY(0); } }
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.3s; }
+.delay-3 { animation-delay: 0.5s; }
+.delay-4 { animation-delay: 0.7s; }
+.delay-5 { animation-delay: 0.9s; }
+
+.icon.heart-btn.liked svg { animation: heart-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes heart-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+

@@ -1,0 +1,121 @@
+/* --- Contenedores Base --- */
+.hero-container {
+    z-index: 10;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+#transition-overlay, #scroll-screen, #reflection-screen, 
+#menu-screen, #section-one-screen, #section-two-screen, 
+#section-three-screen, #section-four-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    background: #0f0f0f;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Pantalla 2 y 3: Glitch y TikTok --- */
+#final-text-container { opacity: 0; z-index: 102; transition: opacity 0.5s; }
+
+#scroll-screen { overflow: hidden; align-items: flex-start; }
+#scroll-container { width: 100%; height: 100vh; overflow: hidden; position: relative; }
+#slide-track { transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) !important; }
+
+.tiktok-ui {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 105;
+    pointer-events: none;
+}
+.bottom-info { position: absolute; left: 20px; bottom: 40px; text-align: left; }
+.username { font-weight: bold; margin-bottom: 5px; }
+.caption { font-size: 0.85rem; color: #ccc; }
+.progress-bar-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: rgba(255, 255, 255, 0.1); }
+#progress-fill { width: 0%; height: 100%; background: #fff; }
+
+/* --- Pantallas Centrales: Menú y Reflexiones --- */
+.reflection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#menu-screen { z-index: 110; }
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+/* --- Pantallas de Juego (Secciones) --- */
+#section-one-screen { z-index: 120; }
+#section-two-screen { z-index: 125; }
+#section-three-screen { z-index: 130; }
+#section-four-screen { z-index: 135; }
+
+.game-container {
+    width: 100%;
+    max-width: 650px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#story-text { font-size: 1.4rem; line-height: 2; min-height: 150px; user-select: none; }
+#options-container { display: flex; justify-content: center; gap: 20px; min-height: 50px; }
+
+.input-area {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease;
+}
+.input-area.show { opacity: 1; transform: translateY(0); }
+
+.fade-out { opacity: 0; transition: opacity 0.8s ease; }
+
+/* --- Pantalla 10: Final Épico --- */
+#epic-finale-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    background: #000;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+#epic-finale-screen .reflection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    height: 450px; 
+}
+
+#finale-text {
+    font-size: 1.8rem;
+    line-height: 1.6;
+    text-align: center;
+    border: none;
+    min-height: 200px; 
+    margin-bottom: 2rem;
+}
+
+#coming-soon-btn {
+    opacity: 0;
+    display: none;
+    pointer-events: none;
+    transition: opacity 2s ease;
+}
